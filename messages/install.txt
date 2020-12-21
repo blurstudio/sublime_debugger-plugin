@@ -1,0 +1,8 @@
+---------------------------------------------------------------
+                    DebugAdapter-Template
+---------------------------------------------------------------
+
+Thanks for installing this debug adapter.
+
+Please ensure you have the "Debugger" plugin installed. 
+If not, please install it and restart Sublime before continuing.
