@@ -2,6 +2,8 @@
 from os.path import abspath, join, dirname, basename, split
 from threading import Timer
 from datetime import datetime
+import json
+
 now = datetime.now()
 
 #  Debugging this adapter
@@ -14,8 +16,12 @@ ptvsd_path = join(abspath(dirname(__file__)), "python")
 
 # --- Utility functions --- #
 
-def log(msg):
+def log(msg, json_msg=None):
     if debug:
+
+        if json_msg:
+            msg += '\n' + json.dumps(json.loads(json_msg), indent=4)
+
         with open(log_file, 'a+') as f:
             f.write('\n' + now.strftime("%Y-%m-%d %H:%M:%S") + " - " + msg + '\n')
 
