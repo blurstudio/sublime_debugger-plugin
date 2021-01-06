@@ -7,22 +7,54 @@ This script adds the the containing package as a valid debug adapter in the Debu
 
 from os.path import join, abspath, dirname
 import sublime
+import json
 
 
-adapter_name = "Template"
-adapter_type = "template"  # NOTE: type must be unique (used as key when storing adapters and to find correct config)
-package_path = join(dirname(abspath(__file__)), "adapter")
+adapter_type = "template"  # NOTE: type must be unique to each adapter
+package_path = dirname(abspath(__file__))
+adapter_path = join(package_path, "adapter")  # customize this to work with your DAP implementation
+json_path = join(package_path, "sublime_debugger.json")
 
-debugger_entry = {  # The entry used by the Debugger to run this adapter
-    "command": ["python", package_path],
-    "type": adapter_type
+
+# The version is only used for display in the GUI
+version = "1.0"
+
+# You can have several configurations here depending on your adapter's offered functionalities,
+# but they all need a "label", "description", and "body"
+config_snippets = [
+    {
+        "label": "Template Plugin",
+        "description": "A template for creating DAP implementations for Sublime Text 3",
+        "body": {
+            "name": "Template Plugin",  
+            "type": adapter_type,
+            "program": "\${file\}",
+            "request": "attach",  # can only be attach or launch
+            "extra setting": "\${lookbelow\}"
+        }
+    },
+]
+
+# The settings used by the Debugger to run the adapter.
+# Variables under "settings" will be used to fill out configurations at runtime
+settings = {
+    "type": adapter_type,
+    "command": ["python", adapter_path],
+    "install info": json_path,
+    "settings": {
+        # These must all be strings.
+        # Convert them back to bools/ints in your adapter when recieved
+        "lookbelow": "User can change this in Debugger settings, "
+                     "and it gets filled into the configs above at runtime"
+    }
 }
 
-default_config = {  # Default settings for this adapter to use
-    "name": "Template (Do not use)",  # how the config appears in Sublime
-    "request": "attach",  # can only be attach or launch
-    "type": adapter_type
-}  # Feel free to add any other keys. The provided ones are the minimum required
+# Write contents to json immediately
+with open(json_path, 'w') as f:
+    json.dump({
+        "version": version,
+        "configurationSnippets": config_snippets
+    }, f)
 
 
 def plugin_loaded():
@@ -31,49 +63,19 @@ def plugin_loaded():
     debugger_settings = sublime.load_settings('debugger.sublime-settings')
     adapters_custom = debugger_settings.get('adapters_custom', {})
 
-    adapters_custom[adapter_type] = debugger_entry
+    adapters_custom[adapter_type] = settings
 
     debugger_settings.set('adapters_custom', adapters_custom)
     sublime.save_settings('debugger.sublime-settings')
-
-    # Add configuration to debug configurations
-    data = sublime.active_window().project_data()
-    if data:
-        data.setdefault('settings', {}).setdefault('debug.configurations', [])
-        configs = data["settings"]["debug.configurations"]
-
-        for index, config in enumerate(configs):
-            if config["name"] == default_config["name"]:
-                return  # The config is already in the project settings. Just return
-
-        configs.append(default_config)
-        sublime.active_window().set_project_data(data)
 
 
 def plugin_unloaded():
-    """This is all done every unload just in case this adapter is being uninstalled"""
 
-    # Remove entry from debugger settings
+    # Remove entry from debugger settings (in case this adapter is being uninstalled)
     debugger_settings = sublime.load_settings('debugger.sublime-settings')
     adapters_custom = debugger_settings.get('adapters_custom', {})
 
-    adapters_custom.pop(adapter_name, "")
+    adapters_custom.pop(adapter_type, "")
 
     debugger_settings.set('adapters_custom', adapters_custom)
     sublime.save_settings('debugger.sublime-settings')
-
-    # Remove configuration from debug configurations
-    data = sublime.active_window().project_data()
-    if data:
-        data.setdefault('settings', {}).setdefault('debug.configurations', [])
-        configs = data["settings"]["debug.configurations"]
-        index = -1
-
-        for index, config in enumerate(configs):
-            if config["name"] == default_config["name"]:
-                break
-
-        if index >= 0:
-            configs.pop(index)
-
-        sublime.active_window().set_project_data(data)
