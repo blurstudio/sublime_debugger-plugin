@@ -4,8 +4,6 @@ from threading import Timer
 from datetime import datetime
 import json
 
-now = datetime.now()
-
 #  Debugging this adapter
 debug = True
 log_file = abspath(join(dirname(__file__), '..', 'log.txt'))
@@ -23,7 +21,7 @@ def log(msg, json_msg=None):
             msg += '\n' + json.dumps(json.loads(json_msg), indent=4)  # indent the json for readability
 
         with open(log_file, 'a+') as f:
-            f.write('\n' + now.strftime("%Y-%m-%d %H:%M:%S") + " - " + msg + '\n')
+            f.write('\n' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " - " + msg + '\n')
 
 
 def run_in_new_thread(func, args=None):
