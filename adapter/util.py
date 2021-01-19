@@ -1,5 +1,5 @@
 
-from os.path import abspath, join, dirname, basename, split
+from os.path import abspath, join, dirname
 from threading import Timer
 from datetime import datetime
 import json
