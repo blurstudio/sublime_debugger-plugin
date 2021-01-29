@@ -14,7 +14,8 @@ if debug:
 
 # --- Utility functions --- #
 
-def log(msg, json_msg=None):
+def log(msg: str, json_msg: str = None):
+    
     if debug:
 
         if json_msg:
@@ -24,7 +25,13 @@ def log(msg, json_msg=None):
             f.write('\n' + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + " - " + msg + '\n')
 
 
-def run_in_new_thread(func, args=None):
+def run_in_new_thread(func: function, args: tuple = None):
+
     Timer(0.01, func, args=args).start()
+
+
+# Constants
+
+CONTENT_HEADER = "Content-Length: "
 
 
