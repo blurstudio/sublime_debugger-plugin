@@ -10,10 +10,10 @@ class DebuggerInterface:
     messages from/to the debugger vis stdin/stdout.
     """
 
-    def __init__(self, on_recieve: function = None):
+    def __init__(self, on_receive = None):
         self.send_queue = Queue()
         self.running = False
-        self.callback = on_recieve
+        self.callback = on_receive
 
     def start(self):
         if not self.running:
@@ -34,7 +34,7 @@ class DebuggerInterface:
     def send(self, message: str):
         self.send_queue.put(message)
 
-    def _read_debugger_input(self, callback: function):
+    def _read_debugger_input(self):
         """
         Reads DAP messages sent from the debugger through stdin and calls the
         function passed in as the callback with the message recieved.

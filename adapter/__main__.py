@@ -23,7 +23,7 @@ def main():
 
     # Create a DebuggerInterface instance in main, optionally passing a function 
     # to call when a message is recieved from the debugger
-    interface = DebuggerInterface(on_recieve=on_recieve)
+    interface = DebuggerInterface(on_receive=on_receive)
 
     # Now all you have to do is:
     interface.start()
@@ -34,7 +34,7 @@ def main():
     # But make sure main remains blocked, otherwise the adapter will stop.
 
 
-def on_recieve(message: str):
+def on_receive(message: str):
     """
     Gets called every time a new message is received from the debugger.
     This function is run in the same thread as the message-recieving loop, so make sure it is non-blocking.
