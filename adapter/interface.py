@@ -31,7 +31,7 @@ class DebuggerInterface:
         if self.running:
             self.running = False
 
-    def send(self, message: str):
+    def send(self, message):
         self.send_queue.put(message)
 
     def _read_debugger_input(self):
@@ -76,7 +76,7 @@ class DebuggerInterface:
         """
 
         while self.running:
-            msg: str = self.send_queue.get()
+            msg = self.send_queue.get()
             if msg is None:
                 return
             else:

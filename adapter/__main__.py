@@ -28,13 +28,13 @@ def main():
     # Now all you have to do is:
     interface.start()
 
-    # And if you want an unblocking statement:
+    # And if you want a nonblocking statement:
     # interface.start_nonblocking()
     # 
     # But make sure main remains blocked, otherwise the adapter will stop.
 
 
-def on_receive(message: str):
+def on_receive(message):
     """
     Gets called every time a new message is received from the debugger.
     This function is run in the same thread as the message-recieving loop, so make sure it is non-blocking.
@@ -56,7 +56,7 @@ def on_receive(message: str):
     run_in_new_thread(blocking_function, args=("hello", "world"))
 
 
-def blocking_function(arg1: str, arg2: str):
+def blocking_function(arg1, arg2):
     
     while True:
         log(arg1 + " " + arg2 + "!")
