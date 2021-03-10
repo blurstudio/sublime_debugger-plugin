@@ -9,6 +9,7 @@ from os.path import join, abspath, dirname
 from threading import Timer
 import sublime
 import time
+import sys
 
 
 adapter_type = "template"  # NOTE: type name must be unique to each adapter
@@ -48,7 +49,7 @@ config_snippets = [
 # The settings used by the Debugger to run the adapter.
 settings = {
     "type": adapter_type,
-    "command": ["python", adapter_path]
+    "command": [sys.executable, adapter_path]
 }
 
 # Instantiate variables needed for checking thread
