@@ -51,7 +51,7 @@ def on_receive(message):
     interface.send(res_msg)
 
     # If you need to do heavier processing, need blocking statements, 
-    # or want controlled infinite loops, run an external function in a new thread.
+    # or want controlled infinite loops, run the function in a new thread.
     # Arguments can be passed as shown
     run_in_new_thread(blocking_function, args=("hello", "world"))
 
